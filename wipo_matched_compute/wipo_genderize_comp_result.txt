@@ -1,0 +1,50 @@
+In the patents database, # of uniq names: 119,558
+
+WIPO:
+In the dictionary, # of uniq name: 185,924
+Uniq patent names get match: 16,947 / 119,558
+(Match method: if the inventor_name_first has a matching name that begins with the inventor_name_first in WIPO)
+
+genderize.io:
+Uniq patent names get match: 28,822 / 119,558
+General match ratio:
+decades_cleaned: 447,537 / 516,841
+non_US_AI_cleaned: 9,644 / 12,038
+non_US_all_cleaned: 1,009,932 / 1,346,204
+US_AI_cleaned: 19,360 / 21,160
+US_all_cleaned: 981,568 / 1,059,357
+
+Unique name match ratio:
+decades_cleaned: 11317 / 27456
+non_US_AI_cleaned: 2522 / 4025
+non_US_all_cleaned: 20334 / 89670
+US_AI_cleaned: 2849 /  3741
+US_all_cleaned: 19718 / 45850
+
+Commands run on BigQuery:
+### Select uniq names from all 5 patent tables:
+(119,558 uniq first names)
+```
+SELECT inventor_name_first
+FROM (SELECT * FROM[natural-venture-179401:Leaderboard.decades_cleaned_gender2]),
+(SELECT * FROM[natural-venture-179401:Leaderboard.non_US_all_cleaned_gender2]),
+(SELECT * FROM[natural-venture-179401:Leaderboard.non_US_AI_cleaned_gender2]),
+(SELECT * FROM[natural-venture-179401:Leaderboard.US_AI_cleaned_gender2]),
+(SELECT * FROM[natural-venture-179401:Leaderboard.US_all_cleaned_gender2])
+GROUP BY inventor_name_first
+```
+###
+```
+SELECT COUNT(*)
+FROM [natural-venture-179401:Leaderboard.US_all_cleaned_gender2]
+WHERE gender is not null and length(gender) > 0;
+```
+```
+SELECT COUNT(*)
+FROM(
+SELECT inventor_name_first
+FROM [natural-venture-179401:Leaderboard.US_all_cleaned_gender2]
+WHERE gender is not null and length(gender) > 0
+GROUP BY inventor_name_first
+)
+```
