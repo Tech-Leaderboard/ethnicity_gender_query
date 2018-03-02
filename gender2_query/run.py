@@ -1,5 +1,6 @@
+# -*- encoding: utf-8 -*-
 import csv
-import urllib2
+import requests
 import json
 import time
 import sys
@@ -33,20 +34,28 @@ for name in name_list:
 
     response = None
     try:
-        response = urllib2.urlopen(query).read().decode("utf-8")
-    except:
-        print query
+        response = requests.get(query)
+    except Exception as e:
+        print(e)
         sys.stdout.flush()
         file4.write('Fail response: %s\n' % name)
         file4.flush()
 
     if response is not None:
-        jsonobj = json.loads(response)
-        if jsonobj.get('name') != name:
-            file4.write('Return Name not matched: request - %s response - %s\n' % (name, jsonobj.get('name')))
+        try:
+            jsonobj = response.json()
+        except Exception as e:
+            print(e)
+            sys.stdout.flush()
+            file4.write('Fail to parse response to json: %s\n' % response)
+            file4.flush()
+            continue
+
+        if jsonobj.get('name').encode('utf-8') != name:
+            file4.write('Return Name not matched: request - %s response - %s\n' % name, jsonobj.get('name').encode('utf-8'))
             file4.flush()
         else:
-            tmp = [jsonobj.get('name'), jsonobj.get('gender') or '', str(jsonobj.get('probability') or ''), str(jsonobj.get('count') or '')]
+            tmp = [name, (jsonobj.get('gender') or '').encode('utf-8'), str(jsonobj.get('probability') or ''), str(jsonobj.get('count') or '')]
             csv_file3.write(','.join(tmp) + '\n')
             csv_file3.flush()
     else:
@@ -56,33 +65,3 @@ for name in name_list:
 
 csv_file3.close()
 file4.close()
-
-
-
-'''
-with open(file_name) as myfile:
-    lines = myfile.readlines()
-    #row0 += ['gender', 'probability', 'count']
-    res_file = open('gender_tmp.csv',"w+")
-
-    for line in lines:
-        idx1 = line.find('/?')
-        idx2 = line.find('&')
-
-        fname = line[idx1: idx2][7:]
-
-        if fname not in table:
-            try:
-                print fname.replace('%20', ' ')
-                query = ('%sname=%s' % (BASE_URL, fname.replace(' ', '%20')))
-                response = urllib2.urlopen(query).read().decode("utf-8")
-                data = json.loads(response)
-                if data.get('gender') is not None:
-                    tmp = [fname.replace('%20', ' '), data.get('gender') or '', str(data.get('probability') or ''), str(data.get('count') or '')]
-                    res_file.write(','.join(tmp) + '\n')
-                    table[fname] = tmp[:]
-            except:
-                print(query)
-
-    res_file.close()
-'''

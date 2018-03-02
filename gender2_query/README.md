@@ -53,4 +53,10 @@
    FROM [natural-venture-179401:Leaderboard.US_all_cleaned_gender2] as a
    LEFT JOIN [natural-venture-179401:Leaderboard.gender2] as b
    ON a.inventor_name_first = b.inventor_name_first
+
+   #standardSQL
+   SELECT a.*, b.gender, b.probability, b.count
+   FROM `natural-venture-179401.Leaderboard.nips_cleaned` a
+   LEFT JOIN `natural-venture-179401.Leaderboard.gender_classifier_2` b
+   ON a.author_name_first = b.name_first;
    ```
