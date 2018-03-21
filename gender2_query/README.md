@@ -1,6 +1,10 @@
 ### How to run this script
+1. With Python 2 installed, install the libraries:
+   ```
+   pip install requests
+   ```
 
-1. Select the distinct first names from BigQuery, with the format a name a line, save the names in the file: names2query.csv.
+2. Select the distinct first names from BigQuery, with the format a first name a line, save the names in the file: names2query.csv.
    Select Example:
    ```
    SELECT inventor_name_first
@@ -12,48 +16,18 @@
    GROUP BY inventor_name_first
    ```
 
-2. Run the script:
+   If you want to use the previous queried data, please keep the data in "gender_tmp.csv"; otherwise, have better to backup old "gender_tmp.csv" for future comparison, then clear the data in "gender_tmp.csv";
+
+3. Run the script:
    ```
    python run.py
    ```
 
-3. Repeat 2 until get all the names results
+4. Repeat step 3 until get all the names results. From the terminal, you can see how many names to be queried. And from "fail.txt", you can check which names failed to query last time. Repeat step 3 unitl # names to be queried is 0.
 
-4. Upload the data into BigQuery, and execute the SQL to merge the results.
+5. Upload the result data "gender_tmp.csv" into BigQuery, and execute the SQL to merge the results, then save the merge results into a new table with suffix gender2.
    Select example:
    ```
-   SELECT a.patent_id as patent_id,
-          a.patent_issue_date as patent_issue_date,
-          a.inventor_name_first as inventor_name_first,
-          a.inventor_name_middle as inventor_name_middle,
-          a.inventor_name_last as inventor_name_last,
-          a.city as city,
-          a.state as state,
-          a.country as country,
-          if(length(a.gender) = 0 or a.gender is null, b.gender, a.gender) as gender,
-          if(length(a.probability) = 0 or a.probability is null, b.probability, a.probability) as probability,
-          if(length(a.count) = 0 or a.count is null, b.count, a.count) as count
-   FROM [natural-venture-179401:Leaderboard.decades_cleaned_gender2] as a
-   LEFT JOIN [natural-venture-179401:Leaderboard.gender2] as b
-   ON a.inventor_name_first = b.inventor_name_first
-
-   SELECT a.application_number as application_number,
-          a.filing_date as filing_date,
-          a.uspc_class as uspc_class,
-          a.cpc4 as cpc4,
-          a.inventor_name_first as inventor_name_first,
-          a.inventor_name_middle as inventor_name_middle,
-          a.inventor_name_last as inventor_name_last,
-          a.inventor_rank as inventor_rank,
-          a.inventor_region_code as inventor_region_code,
-          a.inventor_country_code as inventor_country_code,
-          if(length(a.gender) = 0 or a.gender is null, b.gender, a.gender) as gender,
-          if(length(a.probability) = 0 or a.probability is null, b.probability, a.probability) as probability,
-          if(length(a.count) = 0 or a.count is null, b.count, a.count) as count
-   FROM [natural-venture-179401:Leaderboard.US_all_cleaned_gender2] as a
-   LEFT JOIN [natural-venture-179401:Leaderboard.gender2] as b
-   ON a.inventor_name_first = b.inventor_name_first
-
    #standardSQL
    SELECT a.*, b.gender, b.probability, b.count
    FROM `natural-venture-179401.Leaderboard.nips_cleaned` a

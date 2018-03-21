@@ -10,6 +10,7 @@ BASE_URL = 'https://api.genderize.io/?'
 API_KEY = '8ee87528e6948e9bf1304ff1c44d4600'
 
 name_set = set()
+# results cached file
 csv_file1 = open('gender_tmp.csv')
 csv1 = csv.reader(csv_file1, delimiter=',')
 gender_list = list(csv1)
@@ -17,6 +18,7 @@ for row in gender_list[1:]:
     name_set.add(row[0])
 csv_file1.close()
 
+# first names to be queried
 csv_file2 = open('names2query.csv')
 name_list = csv_file2.readlines()
 name_list = [x.strip() for x in name_list]
