@@ -49,7 +49,14 @@
 
 4. Repeat step 3 until get all the names results. From the terminal, you can see how many names to be queried. And from "fail.txt", you can check which names failed to query last time. Repeat step 3 unitl # names to be queried is 0.
 
-5. Upload the result data "gender_tmp.csv" into BigQuery, and execute the SQL to merge the results, then save the merge results into a new table with suffix gender2.
+5. Upload the result data "gender_tmp.csv" into BigQuery, modify the data fields, save into a new table:
+   ```
+   #standardSQL
+   SELECT first_name, country, case gender when 'unknown' then null else gender end as gender, probability/100.0 probability, count
+   FROM `my-project-1491577527670.papers.gender_tmp`
+   ```
+
+6. execute the SQL to merge the results, then save the merge results into a new table with suffix gender2.
    Select example:
    ```
    #standardSQL
