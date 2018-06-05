@@ -62,6 +62,6 @@
    #standardSQL
    SELECT a.*, b.gender, b.probability, b.count
    FROM `natural-venture-179401.Leaderboard.nips_cleaned` a
-   LEFT JOIN `natural-venture-179401.Leaderboard.gender_classifier_2` b
+   LEFT JOIN `natural-venture-179401.Leaderboard.genderapi_classifier` b
    ON a.author_name_first = b.name_first;
    ```
