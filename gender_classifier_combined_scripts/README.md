@@ -92,20 +92,11 @@
 
 6. Combine data from step 5:
    Apply ssn -> wipo -> genderize.io -> GenderAPI
-   Rules: if the previous one has one match, use it and stop, except when genderize.io has less than 10 samples and GenderAPI has a match, then use GenderAPI.
+   Rules: if the previous one has one match >= 0.95, use it and stop; If none mataches >= 0.95, use the first one that has a value.
    ```
-   #standardSQL
-   SELECT first_name, country_code,
-      IF(ssn_gender IS NOT NULL, ssn_gender, IF(wipo_gender IS NOT NULL, wipo_gender, IF(gi_gender IS NOT NULL AND NOT (gi_count < 10 AND ga_count IS NOT NULL), gi_gender, IF(ga_gender IS NOT NULL, ga_gender, null)))) com_gender,
-      IF(ssn_probability IS NOT NULL, ssn_probability, IF(wipo_probability IS NOT NULL, wipo_probability, IF(gi_probability IS NOT NULL AND NOT (gi_count < 10 AND ga_count IS NOT NULL), gi_probability, IF(ga_probability IS NOT NULL, ga_probability, null)))) com_probability,   
-      IF(ssn_count IS NOT NULL, ssn_count, IF(wipo_count IS NOT NULL, wipo_count, IF(gi_count IS NOT NULL AND NOT (gi_count < 10 AND ga_count IS NOT NULL), gi_count, IF(ga_count IS NOT NULL, ga_count, null)))) com_count,     
-      ssn_gender, ssn_probability, ssn_count,
-      wipo_gender, wipo_probability, wipo_count,
-      gi_country_code, gi_gender, gi_probability, gi_count,
-      ga_country_code, ga_gender, ga_probability, ga_count
-   FROM `my-project-1491577527670.gender_combined.gender_classifiercom5` a
+   python combine.py
    ```
-   Save the result as `my-project-1491577527670.gender_combined.gender_classifiercom`, this is the final combine result.
+   Upload the result csv to BigQuery, load csv into table: `my-project-1491577527670.gender_combined.gender_classifiercom`.
    Then copy the table to be: `natural-venture-179401.Leaderboard.gender_classifier_com`
 
 
