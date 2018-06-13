@@ -34,10 +34,10 @@ for i, in_file in enumerate(in_files):
             tmp_name = name[:j].lower()
             table_name_cnt[tmp_name] = table_name_cnt.get(tmp_name, 0) + 1
             table_gender_cnt[tmp_name] = table_gender_cnt.get(tmp_name, 0) + (1 if row[gender_idx[i]] == 'M' else 0)
-            
+
             if len(country_code) == 0:
                 continue
-            pair = (name.lower(), country_code.lower())
+            pair = (tmp_name.lower(), country_code.lower())
             table_name2_cnt[pair] = table_name2_cnt.get(pair,0) + 1
             table_gender2_cnt[pair] = table_gender2_cnt.get(pair, 0) + (1 if row[gender_idx[i]] == 'M' else 0)
 
