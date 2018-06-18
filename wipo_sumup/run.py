@@ -29,12 +29,14 @@ for i, in_file in enumerate(in_files):
         for j, c in enumerate(name):
             if c == ' ':
                 space_idx.append(j)
-
+        space_idx.append(len(name))
+        
         for j in space_idx:
             tmp_name = name[:j].lower()
             pair = (tmp_name.lower(), country_code.lower())
             table_name_cnt[pair] = table_name_cnt.get(pair,0) + 1
             table_gender_cnt[pair] = table_gender_cnt.get(pair, 0) + (1 if row[gender_idx[i]] == 'M' else 0)
+
 
 for name, country_code in table_name_cnt:
     probability = float(table_gender_cnt[(name, country_code)]) / float(table_name_cnt[(name, country_code)])
