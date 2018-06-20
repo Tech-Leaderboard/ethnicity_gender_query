@@ -64,6 +64,8 @@ for name in name_list:
             file4.flush()
         else:
             tmp = [name, country_code, (jsonobj.get('gender') or '').encode('utf-8'), str(jsonobj.get('probability') or ''), str(jsonobj.get('count') or '')]
+            if ',' in name:
+                tmp[0] = '"' + name + '"'
             csv_file3.write(','.join(tmp) + '\n')
             csv_file3.flush()
     else:
