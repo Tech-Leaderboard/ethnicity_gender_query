@@ -185,7 +185,7 @@ Result: save as genderapi_gendercoded
       FROM `my-project-1491577527670.gender_work.inventors_cleaned_wipo_jensen` a
       LEFT JOIN `my-project-1491577527670.gender_work.genderize_gendercoded` b
       ON a.name_first = b.name_first and b.country_code is null
-     ```
+      ```
    Result: save as inventors_cleaned_wipo_jensen_genderize
 
    4. To aaai_cleaned_wipo_jensen
@@ -211,8 +211,8 @@ Result: save as genderapi_gendercoded
       FROM `my-project-1491577527670.gender_work.nips_cleaned_wipo_jensen` a
       LEFT JOIN `my-project-1491577527670.gender_work.genderize_gendercoded` b
       ON a.author_name_first = b.name_first and b.country_code is null
-     ```
-   Result: save as nips_cleaned_wipo_jensen_genderize
+      ```
+  Result: save as nips_cleaned_wipo_jensen_genderize
 
 4. Then apply with Gender API
    1. To US_AI_cleaned_wipo_jensen_genderize
